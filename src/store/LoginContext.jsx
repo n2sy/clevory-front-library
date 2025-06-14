@@ -8,8 +8,9 @@ export let LoginContext = createContext({
 });
 
 function LoginContextProvider(props) {
-  const [isLogged, setIsLogged] = useState(true);
-  const [role, setIsRole] = useState("admin");
+  let token = localStorage.getItem("access_token");
+  const [isLogged, setIsLogged] = useState(token ? true : false);
+  const [role, setIsRole] = useState("");
 
   function seConnecter(newRole) {
     setIsLogged(true);

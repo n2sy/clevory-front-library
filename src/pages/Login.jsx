@@ -2,17 +2,48 @@ import { useContext, useState } from "react";
 import classes from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../store/LoginContext";
+import axios from "axios";
 
 function Login() {
   const [showRegister, setShowRegister] = useState(true);
   const [emailValue, setEmailValue] = useState("");
-  const [usernameValue, setUsernameValue] = useState("");
+  const [nameValue, setNameValue] = useState("");
   const [pwdValue, setPwdValue] = useState("");
   let navigate = useNavigate();
   let logCtx = useContext(LoginContext);
 
   function submitHandler(e) {
     e.preventDefault();
+    if (showRegister) {
+      axios
+        .post("http://localhost:3000/auth/register", {
+          name: nameValue,
+          email: emailValue,
+          password: pwdValue,
+        })
+        .then((res) => {
+          alert(res.data.message);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .post("http://localhost:3000/auth/login", {
+          email: emailValue,
+          password: pwdValue,
+        })
+        .then((res) => {
+          alert(res.data.message);
+          localStorage.setItem("access_token", res.data.token);
+          localStorage.setItem("role", res.data.role);
+          logCtx.seConnecter(res.data.role);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
   return (
     <form className={classes.form} onSubmit={submitHandler}>
@@ -31,7 +62,7 @@ function Login() {
           <input
             type="text"
             onChange={(e) => {
-              setUsernameValue(e.target.value);
+              setNameValue(e.target.value);
             }}
           />
         </div>

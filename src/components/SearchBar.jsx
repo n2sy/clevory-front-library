@@ -1,10 +1,13 @@
 import { useRef } from "react";
 
-function SearchBar({ filterBook }) {
+function SearchBar(props) {
   let startyearRef = useRef("");
   let endyearRef = useRef("");
 
-  function searchHandler() {}
+  function searchHandler() {
+    //console.log(startyearRef);
+    props.searchHandler(startyearRef.current.value, endyearRef.current.value);
+  }
 
   return (
     <div>

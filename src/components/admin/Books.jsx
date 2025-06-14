@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookItemTable from "./BookItemTable";
 import Modal from "./Modal";
 import BookFormV2 from "../BookFormV2";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Books() {
   const [listBooks, setListBooks] = useState([]);
   const [show, setShow] = useState(false);
   const [refreshBook, setRefreshBook] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/books/all").then((res) => {
+      console.log(res.data.listeLivres);
+      setListBooks(res.data.listeLivres);
+    });
+  }, []);
 
   return (
     <>
@@ -38,7 +46,6 @@ function Books() {
               <th>Author</th>
               <th>Year</th>
               <th>Genre</th>
-              <th>Image</th>
               <th></th>
               <th></th>
             </tr>
@@ -47,10 +54,9 @@ function Books() {
             {listBooks.map((b) => {
               return (
                 <BookItemTable
-                  updateShow={setShow}
                   key={b.id}
                   selectedBook={b}
-                  setRefreshBook={setRefreshBook}
+                  setListBooks={setListBooks}
                 ></BookItemTable>
               );
             })}
